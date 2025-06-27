@@ -71,7 +71,7 @@ data:
     
     tunnel: ldpi
 
-    credentials-file: /etc/cloudflared/creds/credentials.json
+    credentials-file: /etc/cloudflared/creds/987a29cc-b250-4a7c-bdbf-0c2d89276772.json
 
     # Serves the metrics server under /metrics and the readiness server under /ready
     metrics: 0.0.0.0:2000
