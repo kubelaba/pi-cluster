@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ../../base/linkding
   - cloudflare.yaml
+  - linkding-env-secret.enc.yaml
