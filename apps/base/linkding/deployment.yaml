@@ -13,27 +13,36 @@ spec:
         app: linkding
     spec:
       securityContext:
-        fsGroup: 33 # www-data group ID
-        runAsUser: 33 # www-data user ID
-        runAsGroup: 33 # www-data group ID
-
+        fsGroup: 33
+        runAsUser: 33
+        runAsGroup: 33
       containers:
         - name: linkding
           image: sissbruecker/linkding:1.31.0
           envFrom:
-          # - configMapRef:
-          #       name: linkding-configmap
+            - configMapRef:
+                name: linkding-configmap
             - secretRef:
-                  name: linkding-container-env
+                name: linkding-container-env
           ports:
             - containerPort: 9090
-
           securityContext:
             allowPrivilegeEscalation: false
-
           volumeMounts:
             - name: linkding-data
               mountPath: /etc/linkding/data
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9090
+            initialDelaySeconds: 15
+            periodSeconds: 20
       volumes:
         - name: linkding-data
           persistentVolumeClaim:
