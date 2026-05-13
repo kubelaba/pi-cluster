@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: renovate-configmap
+data:
+  RENOVATE_AUTODISCOVER: "false"
+  RENOVATE_PLATFORM: "github"
+  RENOVATE_GIT_AUTHOR: "Renovate Bot <bot@renovateapp.com>"
+  RENOVATE_REPOSITORIES: "kubelaba/pi-cluster"
