@@ -1,0 +1,72 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookstack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookstack
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: bookstack
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      initContainers:
+        - name: wait-for-mariadb
+          image: busybox:latest
+          command:
+            - sh
+            - -c
+            - until nc -z mariadb 3306; do echo "waiting for mariadb..."; sleep 3; done
+      containers:
+        - name: bookstack
+          image: lscr.io/linuxserver/bookstack:latest
+          envFrom:
+            - configMapRef:
+                name: bookstack-configmap
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bookstack-secret
+                  key: DB_PASSWORD
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bookstack-secret
+                  key: APP_KEY
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: bookstack-config
+              mountPath: /config
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 6
+      volumes:
+        - name: bookstack-config
+          persistentVolumeClaim:
+            claimName: bookstack-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookstack
+spec:
+  selector:
+    app: bookstack
+  ports:
+    - port: 80
+      targetPort: 80

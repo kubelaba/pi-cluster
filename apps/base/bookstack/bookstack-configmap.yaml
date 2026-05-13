@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bookstack-configmap
+data:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "America/New_York"
+  APP_URL: "https://bookstack.kubelaba.com"
+  DB_HOST: "mariadb"
+  DB_PORT: "3306"
+  DB_DATABASE: "bookstack"
+  DB_USERNAME: "bookstack"

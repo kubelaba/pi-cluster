@@ -1,0 +1,3 @@
+creation_rules:
+  - path_regex: apps/staging/.*secret.*\.yaml
+    age: age1khss8e3tj2u794n4gx9rs833gafuflmrpmg3mm6e0hwy2q8k7d3qw6qcsz
